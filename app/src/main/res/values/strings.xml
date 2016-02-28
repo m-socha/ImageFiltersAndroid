@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ImageBlurrer</string>
+
+    <!-- region general -->
+    <string name="cancel">Cancel</string>
+    <string name="exit_program">Exit Program</string>
+    <!-- end region -->
+
+    <!--region exit-->
+    <string name="exit_program_confirmation">Are you sure you want to exit the program?</string>
+    <!-- end region-->
+
+    <!-- region sidebar_layout -->
+    <string name="open_image">Open Image</string>
+    <string name="save_image">Save Image</string>
+    <string name="close_image">Close Image</string>
+    <!-- end region -->
+
+    <!-- region filter tabs -->
+    <string name="blur_tab">Blur</string>
+    <string name="invert_tab">Invert</string>
+    <!-- end region -->
+
+</resources>

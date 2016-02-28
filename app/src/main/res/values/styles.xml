@@ -1,0 +1,52 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- region sidebar_layout -->
+    <style name="sidebar_entry_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="sidebar_image">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
+    <style name="sidebar_label">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/light_text</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <!-- end region sidebar_layout -->
+
+    <!-- region topbar_layout -->
+    <style name="filter_tab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/light_text</item>
+        <item name="android:background">@color/filter_tab_background</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <!-- end region -->
+
+    <!-- region bottombar_layout -->
+    <style name="bottombar_rotate_image">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+    <!-- end region -->
+
+</resources>

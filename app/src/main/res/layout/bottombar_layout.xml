@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          android:orientation="horizontal"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true">
+
+    <ImageView
+        android:id="@+id/rotate_ccw_image"
+        style="@style/bottombar_rotate_image"
+        android:src="@drawable/rotate_ccw"/>
+
+    <ImageView
+        android:id="@+id/rotate_cw_image"
+        style="@style/bottombar_rotate_image"
+        android:src="@drawable/rotate_cw"/>
+
+    <SeekBar
+        android:id="@+id/filter_weight_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

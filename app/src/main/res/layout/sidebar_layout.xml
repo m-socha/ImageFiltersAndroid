@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+            android:background="@color/dark_grey_transparent">
+
+    <LinearLayout
+        android:id="@+id/open_image_container"
+        style="@style/sidebar_entry_container">
+
+        <ImageView
+            style="@style/sidebar_image"/>
+
+        <TextView
+            style="@style/sidebar_label"
+            android:text="@string/open_image"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/save_image_container"
+        style="@style/sidebar_entry_container">
+
+        <ImageView
+            style="@style/sidebar_image"/>
+
+        <TextView
+            style="@style/sidebar_label"
+            android:text="@string/save_image"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/close_image_container"
+        style="@style/sidebar_entry_container">
+
+        <ImageView
+            style="@style/sidebar_image"/>
+
+        <TextView
+            style="@style/sidebar_label"
+            android:text="@string/close_image"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/exit_program_container"
+        style="@style/sidebar_entry_container">
+
+        <ImageView
+            style="@style/sidebar_image"/>
+
+        <TextView
+            style="@style/sidebar_label"
+            android:text="@string/exit_program"/>
+
+    </LinearLayout>
+
+</LinearLayout>
