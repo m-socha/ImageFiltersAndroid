@@ -3,7 +3,7 @@
 
     <!-- region general -->
     <string name="cancel">Cancel</string>
-    <string name="exit_program">Exit Program</string>
+    <string name="exit_program">Exit</string>
     <!-- end region -->
 
     <!--region exit-->

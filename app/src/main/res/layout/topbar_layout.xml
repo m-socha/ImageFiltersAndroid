@@ -8,22 +8,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/blur_filter_tab"
-                style="@style/filter_tab"
-                android:text="@string/blur_tab"/>
+            <LinearLayout
+                android:id="@+id/tab_holder_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/invert_filter_tab"
-                style="@style/filter_tab"
-                android:text="@string/invert_tab"/>
+                <TextView
+                    android:id="@+id/blur_filter_tab"
+                    style="@style/filter_tab"
+                    android:text="@string/blur_tab"/>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/invert_filter_tab"
+                    style="@style/filter_tab"
+                    android:text="@string/invert_tab"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </ScrollView>
 
