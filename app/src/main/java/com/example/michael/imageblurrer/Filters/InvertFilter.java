@@ -1,7 +1,10 @@
 package com.example.michael.imageblurrer.Filters;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.support.v8.renderscript.*;
+
+import com.example.michael.imageblurrer.Core.ImageFilterApplication;
+import com.example.michael.imageblurrer.ScriptC_invert;
 
 /**
  * Created by michael on 2/28/16.
@@ -23,23 +26,16 @@ public class InvertFilter extends EffectFilter{
 
 	@Override
 	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
-		final Bitmap filteredBitmap = Bitmap.createBitmap(origBitmap.getWidth(), origBitmap.getHeight(), origBitmap.getConfig());
-		for(int x = 0; x < filteredBitmap.getWidth(); x++) {
-			for(int y = 0; y < filteredBitmap.getHeight(); y++) {
-				final int origPixel = origBitmap.getPixel(x, y);
-				filteredBitmap.setPixel(x, y, Color.argb(
-						Color.alpha(origPixel),
-						this.getWeightedInverse(Color.red(origPixel), weight),
-						this.getWeightedInverse(Color.green(origPixel), weight),
-						this.getWeightedInverse(Color.blue(origPixel), weight)
-				));
-			}
-		}
-		return filteredBitmap;
-	}
+		final Bitmap invertedBitmap = Bitmap.createBitmap(origBitmap);
 
-	private int getWeightedInverse(int colorVal, float weight) {
-		return Math.round(colorVal*(1 - weight) + weight*(255 - colorVal));
-	}
+		final RenderScript renderScript = RenderScript.create(ImageFilterApplication.getAppInstance().getAppContext());
+		final ScriptC_invert invertScript = new ScriptC_invert(renderScript);
+		final Allocation inAlloc = Allocation.createFromBitmap(renderScript, origBitmap);
+		final Allocation outAlloc = Allocation.createFromBitmap(renderScript, invertedBitmap);
+		invertScript.set_weight(weight);
+		invertScript.forEach_invert(inAlloc, outAlloc);
 
+		outAlloc.copyTo(invertedBitmap);
+		return invertedBitmap;
+	}
 }

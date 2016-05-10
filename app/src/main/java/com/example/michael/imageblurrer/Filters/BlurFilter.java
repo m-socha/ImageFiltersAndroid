@@ -1,7 +1,6 @@
 package com.example.michael.imageblurrer.Filters;
 
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
