@@ -2,9 +2,13 @@ package com.example.michael.imageblurrer.StateClasses;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ImageView;
 
 import com.example.michael.imageblurrer.Filters.EffectFilter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -41,32 +45,13 @@ public class FilterState {
 		}
 	}
 
-	public void removeFilter() {
-		final int filterIndex = this.indexOfApplication(this.selectedFilter);
-		if(filterIndex != FilterState.FILTER_NOT_FOUND) {
-			this.filterApplications.remove(filterIndex);
-		}
-	}
-
 	public float getAppliedWeight(EffectFilter filter) {
 		final int filterIndex = this.indexOfApplication(filter);
 		return (filterIndex != FilterState.FILTER_NOT_FOUND) ? this.filterApplications.get(filterIndex).weight : 0f;
 	}
 
-	public Bitmap generateBitmap() {
-		Bitmap alteredBitmap = Bitmap.createBitmap(this.originalBitmap);
-		for(FilterApplication filterApplication : this.filterApplications) {
-			if(filterApplication.weight > 0) {
-				alteredBitmap = filterApplication.filter.getBitmapFromFilter(alteredBitmap, filterApplication.weight);
-			}
-		}
-
-		if(this.rotationAngle != 0) {
-			final Matrix matrix = new Matrix();
-			matrix.setRotate(this.rotationAngle);
-			alteredBitmap = Bitmap.createBitmap(alteredBitmap, 0, 0, alteredBitmap.getWidth(), alteredBitmap.getHeight(), matrix, true);
-		}
-		return alteredBitmap;
+	public void generateAndShowBitmap(ImageView imageView) {
+		new BitmapGenerationTask(imageView).execute();
 	}
 
 	public void setSelectedFilter(EffectFilter filter) {
@@ -90,6 +75,42 @@ public class FilterState {
 
 		private EffectFilter filter;
 		private float weight;
+	}
+
+	private class BitmapGenerationTask extends AsyncTask<Void, Void, Bitmap> {
+		private WeakReference<ImageView> imageViewWeakReference;
+
+		public BitmapGenerationTask(ImageView imageView) {
+			this.imageViewWeakReference = new WeakReference<ImageView>(imageView);
+		}
+
+		@Override
+		protected Bitmap doInBackground(Void... imageView) {
+			Bitmap alteredBitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(), false);
+			Log.d("BitmapTest", (alteredBitmap == originalBitmap) + "");
+			for(final FilterApplication filterApplication : filterApplications) {
+				if(filterApplication.weight > 0) {
+					final Bitmap previousBitmap = alteredBitmap;
+					alteredBitmap = filterApplication.filter.getBitmapFromFilter(previousBitmap, filterApplication.weight);
+				}
+			}
+
+			if(rotationAngle != 0) {
+				final Matrix matrix = new Matrix();
+				matrix.setRotate(rotationAngle);
+				alteredBitmap = Bitmap.createBitmap(alteredBitmap, 0, 0, alteredBitmap.getWidth(), alteredBitmap.getHeight(), matrix, true);
+			}
+			return alteredBitmap;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			final ImageView imageView = this.imageViewWeakReference.get();
+			if(imageView != null) {
+				imageView.setImageBitmap(bitmap);
+			}
+		}
+
 	}
 
 }

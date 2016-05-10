@@ -85,12 +85,10 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 		this.filterWeightSeekBar = (SeekBar) findViewById(R.id.filter_weight_bar);
 		this.filterWeightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-			}
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
+			public void onStartTrackingTouch(SeekBar seekBar) {}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -101,7 +99,6 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 
 		this.setupLabelToFilterMap();
 		this.setupFilterTabViews();
-
 	}
 
 	private void setupNavDrawer() {
@@ -125,7 +122,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 						break;
 
 					case R.string.save_image:
-						if (mainImageView.getDrawable() != null) {
+						if (mainImageView.getDrawable() != null && !stateStack.empty()) {
 							final Bitmap displayedBitmap = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
 							String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 							final boolean saveSuccess = Utility.saveImage(getContentResolver(), displayedBitmap, "ImageFilterer" + timeStamp + ".jpg",
@@ -263,8 +260,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 	}
 
 	private void updateBitmap() {
-		Bitmap filteredBitmap = this.getCurrentFilterState().generateBitmap();
-		this.mainImageView.setImageBitmap(filteredBitmap);
+		this.getCurrentFilterState().generateAndShowBitmap(this.mainImageView);
 	}
 
 	private void updateVisibility(boolean imageSelected) {

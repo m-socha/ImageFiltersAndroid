@@ -9,21 +9,21 @@ import com.example.michael.imageblurrer.ScriptC_darken;
 
 public class DarkenFilter extends EffectFilter {
 
-		private static DarkenFilter darkenFilterInstance;
+	private static DarkenFilter darkenFilterInstance;
 
-		public static DarkenFilter getInstance() {
-			if(darkenFilterInstance == null) {
-				darkenFilterInstance = new DarkenFilter();
-			}
-			return darkenFilterInstance;
+	public static DarkenFilter getInstance() {
+		if(darkenFilterInstance == null) {
+			darkenFilterInstance = new DarkenFilter();
 		}
+		return darkenFilterInstance;
+	}
 
-		private DarkenFilter() {
-			super();
-		}
+	private DarkenFilter() {
+		super();
+	}
 
-		@Override
-		public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
+	@Override
+	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
 		final Bitmap darkenedBitmap = Bitmap.createBitmap(origBitmap);
 
 		final RenderScript renderScript = RenderScript.create(ImageFilterApplication.getAppInstance().getAppContext());
@@ -36,6 +36,6 @@ public class DarkenFilter extends EffectFilter {
 		outAlloc.copyTo(darkenedBitmap);
 		renderScript.destroy();
 		return darkenedBitmap;
-		}
+	}
 
 }
