@@ -36,6 +36,7 @@ public class InvertFilter extends EffectFilter{
 		invertScript.forEach_invert(inAlloc, outAlloc);
 
 		outAlloc.copyTo(invertedBitmap);
+		renderScript.destroy();
 		return invertedBitmap;
 	}
 }

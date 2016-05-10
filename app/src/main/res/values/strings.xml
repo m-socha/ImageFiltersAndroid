@@ -20,6 +20,9 @@
 
     <!-- region filter tabs -->
     <string name="blur_tab">Blur</string>
+    <string name="brighten_tab">Brighten</string>
+    <string name="darken_tab">Darken</string>
+    <string name="greyscale_tab">Greyscale</string>
     <string name="invert_tab">Invert</string>
     <!-- end region -->
 

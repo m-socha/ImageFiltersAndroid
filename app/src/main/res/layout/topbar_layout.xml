@@ -26,6 +26,21 @@
                     android:text="@string/blur_tab"/>
 
                 <TextView
+                    android:id="@+id/brighten_filter_tab"
+                    style="@style/filter_tab"
+                    android:text="@string/brighten_tab"/>
+
+                <TextView
+                    android:id="@+id/darken_filter_tab"
+                    style="@style/filter_tab"
+                    android:text="@string/darken_tab"/>
+
+                <TextView
+                    android:id="@+id/greyscale_filter_tab"
+                    style="@style/filter_tab"
+                    android:text="@string/greyscale_tab"/>
+
+                <TextView
                     android:id="@+id/invert_filter_tab"
                     style="@style/filter_tab"
                     android:text="@string/invert_tab"/>

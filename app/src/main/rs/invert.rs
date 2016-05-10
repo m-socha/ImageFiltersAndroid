@@ -4,7 +4,7 @@
 float weight;
 
 static uchar getInvertedColor(uchar color) {
-	return color*(1 - weight) + weight*(255 - color);
+	return (1 - weight)*color + weight*(255 - color);
 }
 
 uchar4 __attribute__((kernel)) invert(uchar4 in, uint32_t x, uint32_t y) {

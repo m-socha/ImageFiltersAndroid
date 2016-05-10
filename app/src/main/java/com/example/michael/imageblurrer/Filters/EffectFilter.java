@@ -2,9 +2,6 @@ package com.example.michael.imageblurrer.Filters;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by michael on 2/27/16.
- */
 public abstract class EffectFilter {
 
 	public EffectFilter() {}

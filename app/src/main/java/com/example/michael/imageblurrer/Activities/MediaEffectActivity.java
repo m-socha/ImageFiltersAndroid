@@ -25,7 +25,10 @@ import android.widget.TextView;
 
 import com.example.michael.imageblurrer.Adapters.NavDrawerListAdapter;
 import com.example.michael.imageblurrer.Filters.BlurFilter;
+import com.example.michael.imageblurrer.Filters.BrightenFilter;
+import com.example.michael.imageblurrer.Filters.DarkenFilter;
 import com.example.michael.imageblurrer.Filters.EffectFilter;
+import com.example.michael.imageblurrer.Filters.GreyscaleFilter;
 import com.example.michael.imageblurrer.Filters.InvertFilter;
 import com.example.michael.imageblurrer.Models.NavDrawerItem;
 import com.example.michael.imageblurrer.R;
@@ -51,8 +54,6 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 	private View noImagesSelectedPrompt;
 
 	private LinearLayout tabHolderLayout;
-	private TextView blurFilterTab;
-	private TextView invertFilterTab;
 
 	private ImageView mainImageView;
 
@@ -124,7 +125,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 						break;
 
 					case R.string.save_image:
-						if(mainImageView.getDrawable() != null) {
+						if (mainImageView.getDrawable() != null) {
 							final Bitmap displayedBitmap = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
 							String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 							final boolean saveSuccess = Utility.saveImage(getContentResolver(), displayedBitmap, "ImageFilterer" + timeStamp + ".jpg",
@@ -143,7 +144,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 						break;
 
 					case R.string.close_image:
-						if(!stateStack.empty()) {
+						if (!stateStack.empty()) {
 							stateStack.pop();
 							if (!stateStack.empty()) {
 								final FilterState filterState = getCurrentFilterState();
@@ -164,15 +165,17 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 
 	private void setupLabelToFilterMap() {
 		this.labelToFilter.put(R.id.blur_filter_tab, BlurFilter.getInstance());
+		this.labelToFilter.put(R.id.greyscale_filter_tab, GreyscaleFilter.getInstance());
+		this.labelToFilter.put(R.id.brighten_filter_tab, BrightenFilter.getInstance());
+		this.labelToFilter.put(R.id.darken_filter_tab, DarkenFilter.getInstance());
 		this.labelToFilter.put(R.id.invert_filter_tab, InvertFilter.getInstance());
 	}
 
 	private void setupFilterTabViews() {
 		this.tabHolderLayout = (LinearLayout) findViewById(R.id.tab_holder_layout);
-		this.blurFilterTab = (TextView) findViewById(R.id.blur_filter_tab);
-		this.blurFilterTab.setOnTouchListener(this);
-		this.invertFilterTab = (TextView) findViewById(R.id.invert_filter_tab);
-		this.invertFilterTab.setOnTouchListener(this);
+		for(int i = 0; i < this.tabHolderLayout.getChildCount(); i++) {
+			this.tabHolderLayout.getChildAt(i).setOnTouchListener(this);
+		}
 	}
 
 	private void updateForFilter(int filterId) {
@@ -217,6 +220,9 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 					break;
 
 				case R.id.blur_filter_tab:
+				case R.id.brighten_filter_tab:
+				case R.id.darken_filter_tab:
+				case R.id.greyscale_filter_tab:
 				case R.id.invert_filter_tab:
 					this.updateForFilter(view.getId());
 					break;
@@ -249,7 +255,6 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 
 			Bitmap originalBitmap = BitmapFactory.decodeFile(picturePath);
 			final FilterState filterState = new FilterState(originalBitmap);
-			filterState.updateRotationAngle(90);
 			this.stateStack.push(filterState);
 			this.updateBitmap();
 			this.updateVisibility(true);

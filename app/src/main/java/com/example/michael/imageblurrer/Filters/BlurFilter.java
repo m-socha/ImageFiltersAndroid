@@ -26,6 +26,7 @@ public class BlurFilter extends EffectFilter {
 		super();
 	};
 
+	@Override
 	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
 		final float radius = weight * 25f;
 		final float scaleFactor = 1f / (1f + 10*weight);
@@ -43,6 +44,7 @@ public class BlurFilter extends EffectFilter {
 		blurEffect.setInput(inAlloc);
 		blurEffect.forEach(outAlloc);
 		outAlloc.copyTo(blurredBitmap);
+		renderScript.destroy();
 		return blurredBitmap;
 	}
 
