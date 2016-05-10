@@ -107,10 +107,9 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 		this.navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
 		final ListView navDrawerListView = (ListView) findViewById(R.id.nav_drawer_list);
 		final ArrayList<NavDrawerItem> navDrawerItems = new ArrayList<>(Arrays.asList(
-				new NavDrawerItem(R.string.open_image, 0),
-				new NavDrawerItem(R.string.save_image, 0),
-				new NavDrawerItem(R.string.close_image, 0),
-				new NavDrawerItem(R.string.exit_program, 0)
+				new NavDrawerItem(R.string.open_image, R.drawable.open_icon),
+				new NavDrawerItem(R.string.save_image, R.drawable.save_icon),
+				new NavDrawerItem(R.string.close_image, R.drawable.close_icon)
 		));
 		final NavDrawerListAdapter navDrawerListAdapter = new NavDrawerListAdapter(this, navDrawerItems);
 		navDrawerListView.setAdapter(navDrawerListAdapter);
@@ -123,6 +122,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 						final Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 						startActivityForResult(intent, LOAD_IMAGE_RESULT);
 						break;
+
 					case R.string.save_image:
 						if(mainImageView.getDrawable() != null) {
 							final Bitmap displayedBitmap = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
@@ -141,6 +141,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 									.show();
 						}
 						break;
+
 					case R.string.close_image:
 						if(!stateStack.empty()) {
 							stateStack.pop();
@@ -154,9 +155,6 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 								openNavDrawer();
 							}
 						}
-						break;
-					case R.string.exit_program:
-						exitProgramDialog();
 						break;
 				}
 			}
@@ -262,24 +260,6 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 	private void updateBitmap() {
 		Bitmap filteredBitmap = this.getCurrentFilterState().generateBitmap();
 		this.mainImageView.setImageBitmap(filteredBitmap);
-	}
-
-	private void exitProgramDialog() {
-		new AlertDialog.Builder(this)
-				.setTitle(R.string.exit_program)
-				.setMessage(R.string.exit_program_confirmation)
-				.setPositiveButton(R.string.exit_program, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						System.exit(0);
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				})
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.show();
 	}
 
 	private void updateVisibility(boolean imageSelected) {

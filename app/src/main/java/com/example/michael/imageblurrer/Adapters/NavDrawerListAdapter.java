@@ -28,7 +28,7 @@ public class NavDrawerListAdapter extends ArrayAdapter<NavDrawerItem> {
 		}
 		final ImageView navImage = (ImageView) navItemView.findViewById(R.id.nav_image);
 		final TextView navHeading = (TextView) navItemView.findViewById(R.id.nav_heading);
-//		navImage.setImageResource(ImageFilterApplication.getAppInstance().getAppContext().getDrawable(1));
+		navImage.setImageDrawable(ImageFilterApplication.getAppInstance().getAppContext().getResources().getDrawable(navDrawerItem.drawableId));
 		navHeading.setText(navDrawerItem.headingId);
 		return navItemView;
 	}
