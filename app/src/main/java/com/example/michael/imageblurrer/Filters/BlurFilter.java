@@ -1,6 +1,7 @@
 package com.example.michael.imageblurrer.Filters;
 
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -13,7 +14,18 @@ import com.example.michael.imageblurrer.Core.ImageFilterApplication;
  */
 public class BlurFilter extends EffectFilter {
 
-	public BlurFilter() {};
+	private static BlurFilter blurFilterInstance;
+
+	public static BlurFilter getInstance() {
+		if(blurFilterInstance == null) {
+			blurFilterInstance = new BlurFilter();
+		}
+		return blurFilterInstance;
+	}
+
+	private BlurFilter() {
+		super();
+	};
 
 	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
 		final float radius = weight * 25f;

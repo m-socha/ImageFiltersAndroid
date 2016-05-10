@@ -8,5 +8,6 @@
     <color name="dark_grey_transparent">#BB777777</color>
     <color name="filter_tab_background">#75845C</color>
     <color name="filter_tab_selected_background">#FF0214</color>
+    <color name="almost_black">#222222</color>
 
 </resources>

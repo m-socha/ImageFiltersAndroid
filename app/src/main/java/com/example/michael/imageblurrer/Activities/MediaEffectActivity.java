@@ -7,18 +7,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,17 +30,25 @@ import com.example.michael.imageblurrer.Filters.InvertFilter;
 import com.example.michael.imageblurrer.Models.NavDrawerItem;
 import com.example.michael.imageblurrer.R;
 import com.example.michael.imageblurrer.StateClasses.FilterState;
+import com.example.michael.imageblurrer.Utility.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+
 public class MediaEffectActivity extends Activity implements View.OnTouchListener {
 
 	private final static int LOAD_IMAGE_RESULT = 1;
 
 	private DrawerLayout navDrawerLayout;
+
+	private View topBarlayout;
+	private View bottomBarLayout;
+	private View noImagesSelectedPrompt;
 
 	private LinearLayout tabHolderLayout;
 	private TextView blurFilterTab;
@@ -57,14 +63,17 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 	private final HashMap<Integer, EffectFilter> labelToFilter = new HashMap<>();
 	private final Stack<FilterState> stateStack = new Stack<>();
 
-	private int rotationAngle = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_media_effect);
 
 		setupNavDrawer();
+
+		this.topBarlayout = findViewById(R.id.top_bar);
+		this.bottomBarLayout = findViewById(R.id.bottom_bar);
+		this.noImagesSelectedPrompt = findViewById(R.id.no_images_selected_prompt);
+		this.updateVisibility(false);
 
 		this.mainImageView = (ImageView) findViewById(R.id.main_image_view);
 
@@ -114,6 +123,38 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 						final Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 						startActivityForResult(intent, LOAD_IMAGE_RESULT);
 						break;
+					case R.string.save_image:
+						if(mainImageView.getDrawable() != null) {
+							final Bitmap displayedBitmap = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
+							String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+							final boolean saveSuccess = Utility.saveImage(getContentResolver(), displayedBitmap, "ImageFilterer" + timeStamp + ".jpg",
+									String.format(getString(R.string.saved_image_desc), timeStamp.toString()));
+							new AlertDialog.Builder(MediaEffectActivity.this)
+									.setTitle(R.string.saving_image)
+									.setMessage(saveSuccess ? R.string.save_success : R.string.save_failed)
+									.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											dialog.cancel();
+										}
+									})
+									.setIcon(android.R.drawable.ic_dialog_alert)
+									.show();
+						}
+						break;
+					case R.string.close_image:
+						if(!stateStack.empty()) {
+							stateStack.pop();
+							if (!stateStack.empty()) {
+								final FilterState filterState = getCurrentFilterState();
+								updateForFilter(filterState, filterState.getSelectedFilter());
+								updateBitmap();
+							} else {
+								updateVisibility(false);
+								mainImageView.setImageBitmap(null);
+								openNavDrawer();
+							}
+						}
+						break;
 					case R.string.exit_program:
 						exitProgramDialog();
 						break;
@@ -124,8 +165,8 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 	}
 
 	private void setupLabelToFilterMap() {
-		this.labelToFilter.put(R.id.blur_filter_tab, new BlurFilter());
-		this.labelToFilter.put(R.id.invert_filter_tab, new InvertFilter());
+		this.labelToFilter.put(R.id.blur_filter_tab, BlurFilter.getInstance());
+		this.labelToFilter.put(R.id.invert_filter_tab, InvertFilter.getInstance());
 	}
 
 	private void setupFilterTabViews() {
@@ -168,12 +209,12 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 		if(event.getAction() == MotionEvent.ACTION_DOWN) {
 			switch(view.getId()) {
 				case R.id.rotate_cw_image:
-					this.updateRotationAngle(90);
+					this.getCurrentFilterState().updateRotationAngle(90);
 					this.updateBitmap();
 					break;
 
 				case R.id.rotate_ccw_image:
-					this.updateRotationAngle(-90);
+					this.getCurrentFilterState().updateRotationAngle(-90);
 					this.updateBitmap();
 					break;
 
@@ -209,28 +250,18 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 			this.closeNavDrawer();
 
 			Bitmap originalBitmap = BitmapFactory.decodeFile(picturePath);
-			this.stateStack.push(new FilterState(originalBitmap));
-			this.updateRotationAngle(90);
+			final FilterState filterState = new FilterState(originalBitmap);
+			filterState.updateRotationAngle(90);
+			this.stateStack.push(filterState);
 			this.updateBitmap();
-			this.updateForFilter(this.stateStack.peek(), new BlurFilter());
+			this.updateVisibility(true);
+			this.updateForFilter(this.getCurrentFilterState(), BlurFilter.getInstance());
 		}
 	}
 
 	private void updateBitmap() {
-		Bitmap filtersApplied = this.stateStack.peek().generateBitmap();
-		Bitmap rotatedBitmap = this.rotateBitmap(filtersApplied);
-		this.mainImageView.setImageBitmap(rotatedBitmap);
-	}
-
-	private Bitmap rotateBitmap(Bitmap origBitmap) {
-		Matrix matrix = new Matrix();
-		matrix.setRotate(this.rotationAngle);
-		Bitmap rotatedBitmap = Bitmap.createBitmap(origBitmap, 0, 0, origBitmap.getWidth(), origBitmap.getHeight(), matrix, true);
-		return rotatedBitmap;
-	}
-
-	private void updateRotationAngle(int angleToAdd) {
-		this.rotationAngle = (this.rotationAngle + angleToAdd) % 360;
+		Bitmap filteredBitmap = this.getCurrentFilterState().generateBitmap();
+		this.mainImageView.setImageBitmap(filteredBitmap);
 	}
 
 	private void exitProgramDialog() {
@@ -249,6 +280,12 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 				})
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.show();
+	}
+
+	private void updateVisibility(boolean imageSelected) {
+		this.topBarlayout.setVisibility(imageSelected ? View.VISIBLE : View.INVISIBLE);
+		this.bottomBarLayout.setVisibility(imageSelected ? View.VISIBLE : View.INVISIBLE);
+		this.noImagesSelectedPrompt.setVisibility(imageSelected ? View.INVISIBLE : View.VISIBLE);
 	}
 
 	private void openNavDrawer() {

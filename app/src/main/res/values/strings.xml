@@ -2,15 +2,17 @@
     <string name="app_name">ImageBlurrer</string>
 
     <!-- region general -->
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="exit_program">Exit</string>
+    <string name="no_images_selected">No Image Selected</string>
     <!-- end region -->
 
     <!--region exit-->
     <string name="exit_program_confirmation">Are you sure you want to exit the program?</string>
     <!-- end region-->
 
-    <!-- region sidebar_layout -->
+    <!-- region nav_drawer -->
     <string name="open_image">Open Image</string>
     <string name="save_image">Save Image</string>
     <string name="close_image">Close Image</string>
@@ -19,6 +21,13 @@
     <!-- region filter tabs -->
     <string name="blur_tab">Blur</string>
     <string name="invert_tab">Invert</string>
+    <!-- end region -->
+
+    <!-- region saved images -->
+    <string name="saving_image">Saving Image</string>
+    <string name="save_success">Image saved to gallery!</string>
+    <string name="save_failed">Something went wrong - the image was not saved.</string>
+    <string name="saved_image_desc">Produced by Image Filterer at %s</string>
     <!-- end region -->
 
 </resources>

@@ -1,7 +1,7 @@
 package com.example.michael.imageblurrer.StateClasses;
 
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.graphics.Matrix;
 
 import com.example.michael.imageblurrer.Filters.EffectFilter;
 
@@ -14,6 +14,7 @@ public class FilterState {
 
 	private Bitmap originalBitmap;
 	private EffectFilter selectedFilter;
+	private int rotationAngle;
 	private ArrayList<FilterApplication> filterApplications = new ArrayList<>();
 
 	public static final int FILTER_NOT_FOUND = -1;
@@ -59,6 +60,12 @@ public class FilterState {
 				alteredBitmap = filterApplication.filter.getBitmapFromFilter(alteredBitmap, filterApplication.weight);
 			}
 		}
+
+		if(this.rotationAngle != 0) {
+			final Matrix matrix = new Matrix();
+			matrix.setRotate(this.rotationAngle);
+			alteredBitmap = Bitmap.createBitmap(alteredBitmap, 0, 0, alteredBitmap.getWidth(), alteredBitmap.getHeight(), matrix, true);
+		}
 		return alteredBitmap;
 	}
 
@@ -68,6 +75,10 @@ public class FilterState {
 
 	public EffectFilter getSelectedFilter() {
 		return this.selectedFilter;
+	}
+
+	public void updateRotationAngle(int angleToAdd) {
+		this.rotationAngle = (this.rotationAngle + angleToAdd) % 360;
 	}
 
 	private class FilterApplication {

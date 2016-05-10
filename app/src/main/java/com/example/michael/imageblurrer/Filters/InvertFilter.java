@@ -8,7 +8,16 @@ import android.graphics.Color;
  */
 public class InvertFilter extends EffectFilter{
 
-	public InvertFilter() {
+	private static InvertFilter invertFilterInstance;
+
+	public static InvertFilter getInstance() {
+		if(invertFilterInstance == null) {
+			invertFilterInstance = new InvertFilter();
+		}
+		return invertFilterInstance;
+	}
+
+	private InvertFilter() {
 		super();
 	}
 
