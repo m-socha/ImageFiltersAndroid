@@ -1,6 +1,7 @@
 package com.example.michael.imageblurrer.StateClasses;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
  */
 public class FilterState {
 
+	private final static int MAX_IMAGE_DIM = 1024;
+
 	private Bitmap originalBitmap;
 	private EffectFilter selectedFilter;
 	private int rotationAngle;
@@ -25,6 +28,14 @@ public class FilterState {
 
 	public FilterState(Bitmap bitmap) {
 		this.originalBitmap = bitmap;
+		final float maxDimRatio = (float) Math.max(this.originalBitmap.getWidth(), this.originalBitmap.getHeight()) / MAX_IMAGE_DIM;
+		if(maxDimRatio > 1) {
+			final Bitmap unscaledBitmap = this.originalBitmap;
+			this.originalBitmap = this.originalBitmap.createScaledBitmap(this.originalBitmap, Math.round(this.originalBitmap.getWidth() / maxDimRatio), Math.round(this.originalBitmap.getHeight() / maxDimRatio),  false);
+			if(unscaledBitmap != originalBitmap) {
+				unscaledBitmap.recycle();
+			}
+		}
 	}
 
 	private int indexOfApplication(EffectFilter filter) {
@@ -51,7 +62,11 @@ public class FilterState {
 	}
 
 	public void generateAndShowBitmap(ImageView imageView) {
-		new BitmapGenerationTask(imageView).execute();
+		try {
+			new BitmapGenerationTask(imageView).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setSelectedFilter(EffectFilter filter) {
@@ -86,8 +101,7 @@ public class FilterState {
 
 		@Override
 		protected Bitmap doInBackground(Void... imageView) {
-			Bitmap alteredBitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(), false);
-			Log.d("BitmapTest", (alteredBitmap == originalBitmap) + "");
+			Bitmap alteredBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
 			for(final FilterApplication filterApplication : filterApplications) {
 				if(filterApplication.weight > 0) {
 					final Bitmap previousBitmap = alteredBitmap;
@@ -98,7 +112,11 @@ public class FilterState {
 			if(rotationAngle != 0) {
 				final Matrix matrix = new Matrix();
 				matrix.setRotate(rotationAngle);
+				final Bitmap previousBitmap = alteredBitmap;
 				alteredBitmap = Bitmap.createBitmap(alteredBitmap, 0, 0, alteredBitmap.getWidth(), alteredBitmap.getHeight(), matrix, true);
+				if(previousBitmap != alteredBitmap) {
+					previousBitmap.recycle();
+				}
 			}
 			return alteredBitmap;
 		}

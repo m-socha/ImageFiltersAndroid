@@ -250,8 +250,9 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 
 			this.closeNavDrawer();
 
-			Bitmap originalBitmap = BitmapFactory.decodeFile(picturePath);
+			final Bitmap originalBitmap = BitmapFactory.decodeFile(picturePath);
 			final FilterState filterState = new FilterState(originalBitmap);
+			filterState.updateRotationAngle(90);
 			this.stateStack.push(filterState);
 			this.updateBitmap();
 			this.updateVisibility(true);

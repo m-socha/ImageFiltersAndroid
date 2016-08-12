@@ -29,10 +29,13 @@ public class BlurFilter extends EffectFilter {
 	@Override
 	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
 		final float radius = weight * 25f;
-		final float scaleFactor = 1f / (1f + 10*weight);
+		final float scaleFactor = 1f / (1f + 5*weight);
 		final int newHeight = Math.round(origBitmap.getHeight() * scaleFactor);
 		final int newWidth = Math.round(origBitmap.getWidth() * scaleFactor);
 		final Bitmap blurringSource = Bitmap.createScaledBitmap(origBitmap, newWidth, newHeight, false);
+		if(blurringSource != origBitmap) {
+			origBitmap.recycle();
+		}
 		final Bitmap blurredBitmap = Bitmap.createBitmap(blurringSource);
 
 		final RenderScript renderScript = RenderScript.create(ImageFilterApplication.getAppInstance().getAppContext());
