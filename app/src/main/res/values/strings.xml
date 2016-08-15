@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Image Filterer</string>
+    <string name="app_name">Image Filters</string>
 
     <!-- region general -->
     <string name="ok">OK</string>
