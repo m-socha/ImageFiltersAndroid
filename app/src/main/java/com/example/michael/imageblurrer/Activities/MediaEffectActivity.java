@@ -2,6 +2,7 @@ package com.example.michael.imageblurrer.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.WallpaperManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -85,10 +86,12 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 		this.filterWeightSeekBar = (SeekBar) findViewById(R.id.filter_weight_bar);
 		this.filterWeightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -107,6 +110,7 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 		final ArrayList<NavDrawerItem> navDrawerItems = new ArrayList<>(Arrays.asList(
 				new NavDrawerItem(R.string.open_image, R.drawable.open_icon),
 				new NavDrawerItem(R.string.save_image, R.drawable.save_icon),
+				new NavDrawerItem(R.string.set_wallpaper, R.drawable.wallpaper_icon),
 				new NavDrawerItem(R.string.close_image, R.drawable.close_icon)
 		));
 		final NavDrawerListAdapter navDrawerListAdapter = new NavDrawerListAdapter(this, navDrawerItems);
@@ -138,6 +142,31 @@ public class MediaEffectActivity extends Activity implements View.OnTouchListene
 									.setIcon(android.R.drawable.ic_dialog_alert)
 									.show();
 						}
+						break;
+
+					case R.string.set_wallpaper:
+						String wallpaperMessage = getString(R.string.wallpaper_success);
+						if (mainImageView.getDrawable() != null && !stateStack.empty()) {
+							final Bitmap displayedBitmap = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
+							WallpaperManager wallpaperManager = WallpaperManager.getInstance(MediaEffectActivity.this);
+							try {
+								wallpaperManager.setBitmap(displayedBitmap);
+							} catch (Exception e) {
+								wallpaperMessage = getString(R.string.wallpaper_fail_general);
+							}
+						} else {
+							wallpaperMessage = getString(R.string.wallpaper_fail_no_image);
+						}
+						new AlertDialog.Builder(MediaEffectActivity.this)
+							.setTitle(R.string.setting_wallpaper)
+							.setMessage(wallpaperMessage)
+							.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							})
+							.setIcon(android.R.drawable.ic_dialog_alert)
+							.show();
 						break;
 
 					case R.string.close_image:

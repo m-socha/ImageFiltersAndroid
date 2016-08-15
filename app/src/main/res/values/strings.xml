@@ -15,6 +15,7 @@
     <!-- region nav_drawer -->
     <string name="open_image">Open Image</string>
     <string name="save_image">Save Image</string>
+    <string name="set_wallpaper">Set Wallpaper</string>
     <string name="close_image">Close Image</string>
     <!-- end region -->
 
@@ -31,6 +32,13 @@
     <string name="save_success">Image saved to gallery!</string>
     <string name="save_failed">Something went wrong - the image was not saved.</string>
     <string name="saved_image_desc">Produced by Image Filterer at %s</string>
+    <!-- end region -->
+
+    <!-- region setting wallpaper -->
+    <string name="setting_wallpaper">Setting Wallpaper</string>
+    <string name="wallpaper_success">Wallpaper successfully set!</string>
+    <string name="wallpaper_fail_no_image">Please select an image before setting wallpaper.</string>
+    <string name="wallpaper_fail_general">Something went wrong - wallpaper not set.</string>
     <!-- end region -->
 
 </resources>
