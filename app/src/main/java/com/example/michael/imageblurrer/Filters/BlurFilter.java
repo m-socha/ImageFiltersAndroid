@@ -51,4 +51,8 @@ public class BlurFilter extends EffectFilter {
 		return blurredBitmap;
 	}
 
+	@Override
+	protected void setupFilterScript(android.support.v8.renderscript.RenderScript renderScript,
+ 			android.support.v8.renderscript.Allocation inAlloc, android.support.v8.renderscript.Allocation outAlloc, float weight) {} // never called
+
 }

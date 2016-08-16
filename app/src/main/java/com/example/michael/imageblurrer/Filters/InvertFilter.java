@@ -1,9 +1,7 @@
 package com.example.michael.imageblurrer.Filters;
 
-import android.graphics.Bitmap;
-import android.support.v8.renderscript.*;
-
-import com.example.michael.imageblurrer.Core.ImageFilterApplication;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.RenderScript;
 import com.example.michael.imageblurrer.ScriptC_invert;
 
 /**
@@ -25,18 +23,10 @@ public class InvertFilter extends EffectFilter{
 	}
 
 	@Override
-	public Bitmap getBitmapFromFilter(Bitmap origBitmap, float weight) {
-		final Bitmap invertedBitmap = Bitmap.createBitmap(origBitmap);
-
-		final RenderScript renderScript = RenderScript.create(ImageFilterApplication.getAppInstance().getAppContext());
+	protected void setupFilterScript(RenderScript renderScript, Allocation inAlloc, Allocation outAlloc, float weight) {
 		final ScriptC_invert invertScript = new ScriptC_invert(renderScript);
-		final Allocation inAlloc = Allocation.createFromBitmap(renderScript, origBitmap);
-		final Allocation outAlloc = Allocation.createFromBitmap(renderScript, invertedBitmap);
 		invertScript.set_weight(weight);
 		invertScript.forEach_invert(inAlloc, outAlloc);
-
-		outAlloc.copyTo(invertedBitmap);
-		renderScript.destroy();
-		return invertedBitmap;
 	}
+
 }
